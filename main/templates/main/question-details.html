@@ -1,0 +1,273 @@
+{% extends 'main/base1.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+<style>
+  .row {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .coffee-modal {
+    display: none;
+  }
+
+  .thumb-active {
+    fill: #06883a
+  }
+
+  @media screen and (max-width: 776px) {
+    .row {
+      padding: 8px;
+      margin-top: -10px;
+    }
+  }
+
+  .col-md-1 {
+    padding: 0.5rem;
+    padding-top: 0px;
+  }
+
+  div.profile-photo {
+    margin-right: 5px;
+  }
+</style>
+<script>
+  $(document).ready(function () {
+    $('.thumbaction').click(function (e) {
+      e.preventDefault();
+      var postid = document.getElementById('thumbs').getAttribute('data-value');
+      var button = $(this).attr("value");
+      $.ajax({
+        type: 'POST',
+        url: '{% url "thumbs" %}',
+        data: {
+          postid: postid,
+          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          action: 'thumbs',
+          button: button,
+        },
+        success: function (json) {
+          if (json.length < 1 || json == undefined) {
+            //empty
+          }
+          document.getElementById("up").innerHTML = json['up']
+          document.getElementById("down").innerHTML = json['down']
+          $("svg").removeClass("thumb-active");
+
+          if (json['remove'] == 'none') {
+            $("#" + button).removeClass("thumb-active");
+          } else {
+            $("#" + button).addClass("thumb-active");
+          }
+
+        },
+        error: function (xhr, errmsg, err) { }
+      });
+    });
+  });
+</script>
+<div class="col-md-9">
+  <div class="mt-1">
+    <div class="row">
+      <!-- Coffee Modal -->
+      <div class="modal fade" id="coffeeModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content" style="margin-top: -420px;">
+            <div class="modal-header" style="border-bottom: 1px solid #6972806d;">
+              <h3 class="modal-title content-title" id="exampleModalLongTitle">Buy me a coffee
+              </h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="margin-top: -10px;justify-content: center;text-align: center;">
+              <img src="{% static './assets/img/pay.jpg' %}" height="500" width="400" style="border-radius: 2rem;">
+            </div>
+          </div>
+        </div>
+      </div>
+      {% if q.author == user %}
+      <div class="col-md-12 mt-2 ml-3" style="position: absolute;z-index: 99;">
+        <a class="fa fa-times btn-sm" style="float: right; font-size: 18px;"
+          href="{% url 'question_deleted' q.id %}"></a>
+      </div>
+      {% endif %}
+      <div class="col-md-1 mt-1">
+        <a href="{% url 'name_profile' q.author.username %}">
+          <div class="profile-photo" style="display: inline-flex; display: flex;align-items:flex-start;">
+            <img src="{{q.author.profile_pic.url}}" alt="Profile Photo">
+          </div>
+        </a>
+        <div style="flex:0.1;display: flex; justify-content: center;" class="pt-2 mt-2 card stats">
+          <div class="text-center">
+            <span id="thumbs" data-value="{{q.pk}}"></span>
+            <span id="i_like_this" style="position: absolute;color: black;" class="mt-4 mx-2 px-1 pb-1"><span id="up"
+                style="display: block;font-weight: 700;">{{q.thumbsup}}</span></span>
+            <a {% if request.user.is_authenticated %}
+              class="btn btn-link text-dark p-0 border-0 btn-outline-light thumbaction" {% else %}
+              href="{% url 'name_questionsingle' q.pk %}" class="btn btn-link text-dark  p-0 border-0 btn-outline-light"
+              {% endif %} value="thumbsup" data-toggle="tooltip" title="Upvote" role="button">
+              <svg style="font-size: 20px; margin-top: -10px;" id="thumbsup" width="1.5em" height="1.5em"
+                viewBox="0 0 16 16" class="up bi bi-caret-up-fill" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+              </svg>
+            </a>
+            <span id="down" style="display: none;font-weight: 700;">{{q.thumbsdown}}</span>
+            <a {% if request.user.is_authenticated %}
+              class="btn btn-link text-dark p-0 border-0 btn-outline-light thumbaction" {% else %}
+              href="{% url 'name_questionsingle' q.pk %}" class=" btn btn-link text-dark p-0 border-0 btn-outline-light"
+              {% endif %} value="thumbsdown" data-toggle="tooltip" title="Downvote" role="button">
+              <svg style="font-size: 20px; margin-top: -10px;" id="thumbsdown" width="1.5em" height="1.5em"
+                viewBox="0 0 16 16" class="mt-2 down bi bi-caret-down-fill" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+              </svg>
+            </a>
+            <p class="pb-1" style="color: #fb564e;font-weight: 700;" title="Views">{{q.views}}<br><i class="fa fa-eye px-1" style="font-size: 20px;color: #fb564e;"></i></p>
+            <p style="color: #06883a; font-weight: 700;" title="Answers">{{q.answers.all.count}}<br><i class="fa fa-retweet px-1" style="font-size: 20px;color: #06883a;"></i></p>
+          </div>
+        </div>
+      </div>
+      <div class="card col-md-11">
+        <div class="row px-1">
+          <div class="col-md-12 mt-3" style="justify-content: center;">
+            <div style="display: flex;align-items:flex-start; flex-direction: column;">
+              <p><a href="{% url 'name_profile' q.author.username %}"
+                  style="font-weight: 700;">{{q.author.username}}</a>
+                asked 🕖<strong> {{q.created_at|naturaltime}}</strong></p>
+            </div>
+            <h2 class="title">{{q.title}}</h2>
+            {% if q.ques_content %}
+            <div class="px-1" style="margin-top:-18px;">
+              {{q.ques_content | safe | escape}}
+            </div>
+            {% else %}
+            {% endif %}
+            <div class="mb-2 pb-2" style="margin-top:0px;">
+              {% for t in q.tags.all %}
+              <style>
+                .tag {
+                  color: rgb(2, 126, 193);
+                }
+              </style>
+              <button class="btn btn-sm tag " style="background: #5da6c13a;"
+                onclick="location.href = '/tag/{{t.tag_word}}'">{{t.tag_word}}</button>{% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-1 mt-1 "></div>
+      <div class="col-md-11 ans" style="padding: 0; margin: 0;">
+        {% if q.answers.count > 1 %}
+        <h3 style="border-radius: 0.3rem; width: 150px;" class="p-2 card">{{q.answers.all.count}} answers</h3>
+        {% else %}
+        <h3 style="border-radius: 0.3rem; width: 150px;" class="p-2 card">{{q.answers.all.count}} answer</h3>
+        {% endif %}
+      </div>
+      <style>
+        @media screen and (max-width: 576px) {
+          .col-md-11 {
+            margin-left: 45px;
+            margin-top: -40px;
+          }
+
+          .col-md-1 {
+            width: 70px;
+            padding: 0;
+          }
+
+          .stats {
+            width: 40px;
+            position: absolute;
+          }
+
+          .ans h3 {
+            margin-left: 45px;
+          }
+
+          .editor {
+            margin-left: 45px;
+            margin-top: 2px;
+          }
+
+          h2 {
+            font-size: 20px;
+          }
+        }
+      </style>
+      {% for a in all_answers %}
+      <div class="col-md-1 mt-1">
+        <a href="{% url 'name_profile' a.answered_by.username %}">
+          <div class="profile-photo" style="display: inline-flex; display: flex;align-items:flex-start;">
+            <img src="{{a.answered_by.profile_pic.url}}" alt="Profile Photo">
+          </div>
+        </a>
+        <div style="flex:0.1;display: flex; justify-content: center;" class="pt-2 mt-2 card stats">
+          <div class="text-center">
+            <a href="?isQuestion=False&id={{a.pk}}&action_type=upvote&page={{all_answers.number}}"><i
+                class="fa fa-caret-up" style="font-size: 40px; margin-top: -10px; "></i></a>
+            <div style="width: 100%;text-align: center;  margin-top: -10px;" class="pt-1">
+              <p>{{a.votes}}</p>
+            </div>
+            <a href="?isQuestion=False&id={{a.pk}}&action_type=downvote&page={{all_answers.number}}"><i
+                class="fa fa-caret-down" style="font-size: 40px; margin-top: -10px; "></i></a>
+            {% if a.is_accepted %}
+            <div style="width: 100%;text-align: center;" class="pt-1 pb-3"><img
+                src="{% static './assets/img/correct.png' %}" class="p-1"></div>
+            {% endif %}
+            <p class="pb-1 pt-2">{{q.views}}<br><i class="fa fa-eye px-1 pt-1" style="font-size: 20px;"></i></p>
+            <p class="pb-1 pt-1"><a href=""><i class="fa fa-bookmark px-1 pt-1" style="font-size: 20px;"></i></a></p>
+          </div>
+        </div>
+      </div>
+      <div class="card col-md-11">
+        <div class="row px-1">
+          {% if a.answered_by == user %}
+          <div class="col-md-12 mt-2 ml-3" style="position: absolute;z-index: 99;">
+            <a class="fa fa-times btn-sm" style="float: right; font-size: 18px;"
+              href="{% url 'question_deleted' q.id %}"></a>
+          </div>
+          {% endif %}
+          <div class="col-md-12 mt-3" style="justify-content: center;">
+            <div style="display: flex;align-items:flex-start; flex-direction: column;">
+              <p><a href="{% url 'name_profile' a.answered_by.username %}"
+                  style="font-weight: 700;">{{a.answered_by.username}}</a> answered 🕖<strong>
+                  {{q.created_at|naturaltime}}</strong></p>
+            </div>
+            <p class="pt-3">{{a.ans_content|safe|escape}}</p>
+          </div>
+        </div>
+        <div class="mt-3">
+          {% if showaccept and not q.has_accepted_answer %}
+          <h3 class="content-title">Do you accept this solution? <a class="btn btn-success px-3 p-2 mx-2"
+              style="padding: 4px;" href="{% url 'name_is_accepted' q.pk a.pk %}"> Yes!</a></h3>
+          {% endif %}
+        </div>
+      </div>
+
+      {% endfor %}
+
+      <div class="col-md-1 mt-1"></div>
+      <div class="col-md-11 card editor" style="padding: 0;">
+        <!-- Answer Box editor -->
+        <div class="m-2 px-2" style="overflow-x: scroll;">
+          <h3 class="pt-2"><strong>Your Answer</strong></h3>
+          <form method="POST" style="margin-top: -15px;">
+            {% csrf_token %}
+            <textarea name="editor1"></textarea>
+            <script>
+              CKEDITOR.replace('editor1');
+            </script>
+            <button style="float: right;" class="btn btn-success mt-3 p-2" type="submit">Post Answer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'main/base4.html' %}
+
+{% block content %}
+
+      <script type="text/javascript">
+          function showanswerbox(selfans){
+            console.log(selfans.checked)
+            var showanswerboxnow = document.getElementById("wans");
+            showanswerboxnow.style.display = selfans.checked ? "block" : "none";
+          }
+      </script>
+
+
+          <div class="container">
+              <div class= "row">
+
+
+                <div class="col-12 col-md-9 mt-3">
+
+                <form method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="card" style="border-radius: 0.7rem;">
+                    <div class="card-body">
+                      <hr class="invis">
+                      <h2 class="card-title" style="font-weight: 700;">What's on your mind?</h2>
+                      <textarea name="posteditor" style="border-radius: 0.5rem; width: 100%; height: 100px;"></textarea>
+                      
+                      <hr class="invis">
+                      <h2 class="card-title" style="font-weight: 700;">Tags</h2>
+                      <p class="card-text">Add multiple tags separated comma.</p>
+                      <textarea name='tags' style="width:100%;border-radius: 0.5rem;"></textarea>
+
+                      <hr class="invis">
+                      <h2 class="card-title" style="font-weight: 700;">Post with a Photo</h2>
+                      <input type="file" id="fileInput" name="fileInput" />
+                      <hr class="invis">
+                      <button style="width:100%; float: right; width: 150px;"; class="btn btn-success btn-sm p-2 mb-2" type="submit"> Post</button>
+                
+                    </div>
+                    
+                  </div>
+
+                  </form>
+
+
+                </div>
+            
+                
+              </div>
+                
+
+              </div>
+
+          </div>
+          
+{% endblock %}
+ 
+
+

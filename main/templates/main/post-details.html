@@ -1,0 +1,182 @@
+{% extends 'main/base1.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+  <div class="col-md-9">
+    <style>#input{width:85%;}.page-link {position: relative; display: block; padding: .5rem .75rem; margin-left: -1px; line-height: 1.25; font-weight: bold;
+      color: #283850; background-color: #e4e4e4;border: 1px solid #283850;} .btn-sm:hover{opacity: .7;}.rxt{display: none;}.line{display: none;}#stats{display: none;} .text-center{display: flex;}#comments{margin-left: 60px;} .ans-btn {margin-left: 56px;}
+    @media screen and (max-width: 776px) {.col-md-7{margin-left: 45px;position: relative;}
+    .col-md-1{position: absolute; padding-left: 10px;}.qst-pag li a{font-size: 9px;}.question{font-size: 23px;}
+    .col-md-4{margin-left: 45px; padding: 9px;margin-top: -30px;}.rxt{display: block;}.ans-btn{margin-left: 0px;padding-left: 12px;justify-content: start;}div#stats.text-center{display: none;}a.navbar-brand{text-align: center;}img.logo{margin-left: 45px;} 
+    #input{width:75%;}.btn-danger{margin-right: 0px;}
+    .ans-btn {margin-left: -2px;}#info1 {margin-left: 40px; margin-right: 20px;} #info1 .sts{display: none;}.line{display: block;} #like{margin-right: 40px;}#comments{margin:0px 20px 0px 40px;}#stats{display: block;}
+  }
+  #input::placeholder{
+    padding: 8px 0px 0px 14px;
+  }
+  </style>
+   <script>
+
+    $(document).on('click', '#like-button', function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: '{% url "like" %}',
+        data: {
+          id: $('#like-button').val(),
+          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          action: 'POST',
+        },
+        success: function (json) {
+          document.getElementById("like_count").innerHTML = json['result']
+        },
+        error: function (xhr, errmsg, err) {
+  
+        }
+      });
+    })
+  </script>
+
+   <div class="card mt-2">
+
+    {% if p.author == user %}
+    <div class="col-md-12 mt-3" style="position: absolute;">
+     <a class="fa fa-times btn-sm" style="float: right; font-size: 18px;"  href="{% url 'post_deleted' p.id %}"></a></p>
+    </div>
+    {% endif %}
+    <div class="row px-3">
+      <div class="col-md-1" id="info">
+        <a href="{% url 'name_profile' p.author.username %}">
+          <div class="profile-photo mt-3" style="display: inline-flex; display: flex;align-items:flex-start;">
+            <img src="{{p.author.profile_pic.url}}" alt="Profile Photo">
+          </div>
+        </a>
+        
+      </div>
+      <div class="col-md-10 mt-3 pb-2" id="info1" style="justify-content: center;">
+        <div style="display: flex;align-items:flex-start; flex-direction: column;">
+          <p><a href="{% url 'name_profile' p.author.username %}" style="font-weight: 700;">{{p.author.username}}</a> Posted 🕖<strong> {{p.posted_at|naturaltime}}</strong></p>
+        </div>
+        <p style="font-size: 18px">{{p.post_content}}</p>
+        {% if p.post_image %}
+        <div class="justify-content:center align-items-center rounded" style="margin-top:; background-color: rgb(233, 236, 239);">
+          <img src = "{{p.post_image.url}}" style="max-height: 100%; width: 100%;display: cover; border-radius: 0.8rem;">
+        </div>
+        {% endif %}
+        <div class="" style="margin-top:14px;">
+          {% if p.tags.count > 1 %}
+            {% for t in p.tags.all %}
+            <style>.tag{color: rgb(2, 126, 193);}.btn.btn-sm{cursor:unset}</style>
+            <button class="btn btn-sm tag px-2" style="background: #5da6c13a; font-size: 8px;">{{t.tag_word}}</button>{% endfor %}
+          {% else %}
+          {% endif %}
+        </div>
+        <div style="display: flex;flex-direction: row;">
+          {% if p.like_count > 0 %}
+            <div class="p-1 px-2" id="stats">
+              <p style="font-weight: 400;font-size: 15px;">{{p.like_count}} <i class="fa fa-heart" style="color: red;font-size: 16px;"></i> </p>
+            </div>
+          {% else %}
+          {% endif %}
+          {% if p.comments.count > 0 %}
+            <div class="p-1 px-2" id="stats">
+              <p style="font-weight: 400;font-size: 15px;">{{p.comments.count}} <i class="fa fa-comments" style="color: rgb(255, 0, 255); font-size: 16px;"></i> </p>
+            </div>
+          {% else %}
+          {% endif %}
+          {% if p.shares > 0 %}
+            <div class="p-1 px-2" id="stats">
+              <p style="font-weight: 400;font-size: 15px;">{{p.shares}} <i class="fa fa-eye" style="color: rgb(0, 255, 238); font-size: 16px;"></i> </p>
+            </div>
+          {% else %}
+          {% endif %}
+          </div>
+            <div class="line" style="border-top: 1px solid #e4e4e487;"></div>
+          </div>
+      
+        
+      <div style="display: flex;flex-direction: row;font-weight:100; width: 500px; font-size: 12px" class="ans-btn mb-3 col-md-12" id="info1">
+        <div class="p-1 px-2 mb-3" style="margin-right: 20px;">
+          {% if user.is_authenticated %}
+        <div class="pr-2">
+          <span class="" id="like_count" style="color: black;font-weight: 700;">{{p.like_count}}</span>
+          <button class="btn btn-link text-dark p-0 border-0 btn-outline-light" id="like-button" value="{{p.id}}">
+            <svg width="1.2em" height="1.2em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+            </svg>
+          </button>
+        </div>
+        {% else %}
+        <div class="pr-2">
+          <span class="" id="like_count" style="color: black;">{{p.like_count}}</span>
+          <a href="{% url 'name_postdetail' p.pk %}" class="btn btn-link text-dark p-0 border-0 btn-outline-light"
+            value="{{p.id}}">
+            <svg width="1.5em" height="1.5em" viewBox="0 0 16 16" class="bi bi-heart" fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+            </svg>
+          </a>
+        </div>
+        {% endif %}
+        </div>
+        <div class="p-1 px-2 comment" style="margin-right: 20px;">
+          <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 15px;"><i class="fa fa-comments-o" style="font-size: 16px;"></i> Comment</a>
+        </div>
+        <div class="p-1 px-2 share">
+          {% if user.is_authenticated %}
+          <a href="?isQuestion=True&id={{q.pk}}&action_type=downvote&page={{all_answers.number}}" style="font-weight: 400;font-size: 15px;"><i class="fa fa-share-alt" style="font-size: 16px"></i> Share</a>
+          {% else %}
+          <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 15px;"><i class="fa fa-share-alt" style="font-size:16px"></i> Share</a>
+          {% endif %}
+        </div>
+        
+        {% if p.likes.count > 0 %}
+          <div class="p-1 px-2 sts" style="margin-left:80px">
+            <p style="font-weight: 400;font-size: 13px;">{{p.likes.count}} <i class="fa fa-heart" style="color: red;font-size: 16px;"></i></p>
+          </div>
+          {% else %}
+          {% endif %}
+
+          {% if p.comments.count > 0 %}
+          <div class="p-1 px-2 sts" style="padding-right: 0;">
+           <p style="font-weight: 400;font-size: 13px;">{{p.comments.count}} <i class="fa fa-comments" style="color: rgb(255, 0, 255); font-size: 16px;"></i></p>
+          </div>
+          {% else %}
+          {% endif %}
+          
+          {% if p.shares > 0 %}
+          <div class="p-1 px-2 sts" style="padding-right: 0;">
+            <p style="font-weight: 400;font-size: 13px;">{{p.shares}} <i class="fa fa-eye" style="color: rgb(0, 255, 238); font-size: 16px;"></i></p>
+           </div>
+           {% else %}
+           {% endif %}
+      
+      </div>
+      <div class="comments col-md-10 mt-4 mb-3" id="comments">
+        <form method="POST" class="mb-2" style="margin-top: 0px;">
+          {% csrf_token %}
+          <textarea name='comment' id="input" placeholder="Add a comment" style="border-radius: 0.5rem; margin-top: -50px;"></textarea>
+          <button class="btn btn-success p-2 px-3" type="submit" style="float: right; position: absolute;margin: -27px 0px 0px 12px;">Post</button>
+        </form>
+        {% for c in all_comments %}
+        <div style="width: 100%;">
+        {% if c.comment_by == user %}
+        <div class="col-md-12 mt-4" style="position: absolute;">
+        <a class="fa fa-times btn-sm" style="float: right; font-size: 18px;"  href="{% url 'comment_deleted' c.id %}"></a></p>
+        </div>
+        {% endif %}
+          <div style="border-radius: 0.5rem;" class="mb-1" id="comment">
+            <p><img src="{{c.comment_by.profile_pic.url}}" class="mt-3" width="30" height="30" alt="Profile Photo" 
+              style="margin-top: 5px;border-radius: 3rem; border: 3px solid;font-size: 13px;"><a href="{% url 'name_profile' c.comment_by.username %}" style="font-weight: 700;margin-left: 4px;top: -15;">
+              {{c.comment_by.username}}</a><strong> {{c.comment_cont|safe|escape}}</strong></p>
+            <p class="mx-4 px-2" style="margin-top: -20px;font-size: 10px;"> {{c.commented_at|naturaltime}}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div> 
+    </div>
+  </div>
+
+{% endblock %}

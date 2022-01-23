@@ -1,0 +1,57 @@
+{% extends 'main/base3.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<style>
+  body{background-color: black;}
+  input[type=text], input[type=password]{
+    color: #020202;
+  }
+  input[type=password]{
+    color: #020202;
+  }
+  .card label{color: black;}
+</style>
+<body>
+  <div class="col-md-9 mt-5">
+    <div class="row" style="justify-content: center;">
+    {% load crispy_forms_tags %}
+      <div class="col-md-7 card p-3 m-3" style="background: #ffffff">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="mb-3">
+            <div class="card alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert" style="background-color: rgba(13, 225, 158, 0.79);">
+            <strong></strong> {{ message }}
+            <button type="button" class="close mt-1" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true" class=" px-0">&times;</span>
+            </button>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form method="POST">
+          <div class="card-header">
+            <h3 class="card-title text-center" style="color: black;">BIT Stack Login</h3>
+          </div>
+          <div class="container">
+            {% csrf_token %}
+            <fieldset class="form-group" style="color: black;">
+              {{ form|crispy }}
+            </fieldset>
+
+            <button id="button" class="text-white" type="submit">Login</button>
+            <label class="pt-3"  style="color: black;" >
+              <input type="checkbox" checked="checked" name="remember"> Remember me
+            </label>
+            <div class="text-white text-center pt-3">
+              <p>Don't have an account? <a href="{% url 'name_signup' %}">SignUp Now</a></p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

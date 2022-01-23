@@ -1,0 +1,219 @@
+{% extends 'main/base6.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+<script>
+
+  $(document).on('click', '#like-button', function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: 'POST',
+      url: '{% url "like" %}',
+      data: {
+        id: $('#like-button').val(),
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+        action: 'POST',
+      },
+      success: function (json) {
+        document.getElementById("like_count").innerHTML = json['result']
+      },
+      error: function (xhr, errmsg, err) {
+
+      }
+    });
+  })
+</script>
+  <div class="col-md-9">
+    <style>.page-link {position: relative; display: block; padding: .5rem .75rem; margin-left: -1px; line-height: 1.25; font-weight: bold;
+        color: #283850; background-color: #e4e4e4;border: 1px solid #283850;}#stats{display: none;}.line{display: none;}
+        #create{flex-direction: row;} 
+       .btn-sm:hover{opacity: .7;}.rxt{display: none;}.text-center{display: flex;}  .ans-btn {margin-left: 46px;}
+      @media screen and (max-width: 776px) {.col-md-7{margin-left: 45px;position: relative;}
+      .col-md-1{position: absolute; padding-left: 10px;}.qst-pag li a{font-size: 9px;}.question{font-size: 23px;}
+      .col-md-4{margin-left: 45px; padding: 9px;margin-top: -30px;}.rxt{display: block;}.ans-btn{margin-left: 0px;padding-left: 12px;justify-content: start;}div#stats.text-center{display: none;}a.navbar-brand{text-align: center;}img.logo{margin-left: 45px;}  
+      .ans-btn {margin-left: -2px;}#info1 {margin-left: 40px; margin-right: 20px;} #info1 .sts{display: none;}.line{display: block;} #like{margin-right: 40px;}.post{font-size: 22px; padding-top: 2px;}
+      #stats{display: block;} .btn-danger{margin-right: 0px;}}
+      #create{flex-direction: column;}
+      .col-md-12 h3{font-size: 18px;}
+    </style>
+    <div class="card py-3 create mb-3" style="display: flex;flex-direction: row;">
+      <div class="col-md-12">
+        <h3 class="post mt-3" style="justify-content: start; display: inline; font-weight: 100;">
+          {% if user.is_authenticated %}
+          <img style="border-radius: 4rem;margin-right: 3px;" src="{{ user.profile_pic.url }}" width="40" height="40"> 
+          {% endif %} Share your thoughts
+        </h3>
+        <!-- Coffee Modal -->
+      <div class="modal fade" id="coffeeModalCenter" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content" style="margin-top: -420px;">
+            <div class="modal-header" style="border-bottom: 1px solid #6972806d;">
+              <h3 class="modal-title content-title" id="exampleModalLongTitle">Buy me a coffee
+              </h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="margin-top: -10px;justify-content: center;text-align: center;">
+              <img src="{% static './assets/img/pay.jpg' %}" height="500" width="400" style="border-radius: 2rem;">
+            </div>
+          </div>
+        </div>
+      </div>
+        <!-- Button trigger modal -->
+      {% if user.is_authenticated %}
+      <button style="float: right;" type="button" class="btn btn-success px-2" data-toggle="modal"
+        data-target="#exampleModalCenter">
+        Create Post
+      </button>
+      {% else %}
+      <button style="float: right;" onclick="location.href='{% url 'name_createpost' %}'" class="btn btn-success">Ask a
+        Question</button>
+      {% endif %}
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content" style="margin-top: -420px;">
+            <div class="modal-header" style="border-bottom: 1px solid #6972806d;">
+              <h3 class="modal-title content-title" id="exampleModalLongTitle">Create Post
+              </h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="margin-top: -10px;">
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card" style="border-radius: 0.7rem;">
+                  <div class="card-body">
+                    <h2 class="card-title" style="font-weight: 700;color: black;">What's on your mind?</h2>
+                    <textarea name="posteditor" style="border-radius: 0.5rem; width: 100%; height: 100px;"></textarea>
+                    
+                    <h2 class="card-title" style="font-weight: 700;color: black;">Tags</h2>
+                    <p class="card-text">Add multiple tags separated comma.</p>
+                    <textarea name='tags' style="width:100%;border-radius: 0.5rem;"></textarea>
+
+                    <h2 class="card-title" style="font-weight: 700;color: black;">Post with a Photo</h2>
+                    <input type="file" id="fileInput" name="fileInput" />
+                    <hr class="invis">
+                    <button style="width:100%; float: right; width: 150px;"; class="btn btn-success btn-sm p-2 mb-2" type="submit"> Post</button>
+              
+                  </div>
+                </div>
+
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    
+   
+    {% for p in all_posts %}
+    <div class="card mt-2">
+      {% if p.author == user %}
+      <div class="col-md-12 mt-3" style="position: absolute;">
+       <a class="fa fa-times btn-sm" style="float: right; font-size: 18px;z-index: 999;"  href="{% url 'post_deleted' p.id %}"></a>
+      </div>
+      {% endif %}
+      <div class="row px-3">
+        <div class="col-md-1" id="info">
+          <a href="{% url 'name_profile' p.author.username %}">
+            <div class="profile-photo mt-3" style="display: inline-flex; display: flex;align-items:flex-start;">
+              <img src="{{p.author.profile_pic.url}}" alt="Profile Photo">
+            </div>
+          </a>
+        </div>
+        <div class="col-md-10 mt-3 pb-2" id="info1" style="justify-content: center;">
+          <div style="display: flex;align-items:flex-start; flex-direction: column;">
+            <p><a href="{% url 'name_profile' p.author.username %}" style="font-weight: 700;">{{p.author.username}}</a> Posted 🕖<strong> {{p.posted_at|naturaltime}} </strong></p>
+          </div>
+          <p style="font-size: 18px;"><a href="{% url 'name_postdetail' p.pk %}">{{p.post_content}}</a></p>
+          <a href="{% url 'name_postdetail' p.pk %}">
+            {% if p.post_image %}
+            <div class="justify-content:center align-items-center rounded" style="margin-top:; background-color: rgb(233, 236, 239);">
+              <img src = "{{p.post_image.url}}" style="max-height: 100%; width: 100%;display: cover; border-radius: 0.8rem;">
+            </div>
+          </a>
+          {% endif %}
+          <div class="mb-2" style="margin-top:0px;">
+          {% if p.tags.count > 1 %}
+            {% for t in p.tags.all %}
+            <style>.tag{color: rgb(2, 126, 193);}.btn.btn-sm{cursor:unset}</style>
+            <button class="btn btn-sm tag px-2" style="background: #5da6c13a; font-size: 8px;">{{t.tag_word}}</button>
+            {% endfor %}
+          {% else %}
+          {% endif %}
+        </div>
+
+        <div style="display: flex;flex-direction: row;">
+        {% if p.likes.count > 0 %}
+          <div class="p-1 px-2" id="stats">
+            <p style="font-weight: 400;font-size: 12px;">{{p.likes.count}} <i class="fa fa-heart" style="color: red;font-size: 16px;"></i> </p>
+          </div>
+        {% else %}
+        {% endif %}
+        {% if p.comments.count > 0 %}
+          <div class="p-1 px-2" id="stats">
+            <p style="font-weight: 400;font-size: 12px;">{{p.comments.count}} <i class="fa fa-comments" style="color: rgb(255, 0, 255); font-size: 16px;"></i> </p>
+          </div>
+        {% else %}
+        {% endif %}
+        {% if p.shares > 0 %}
+          <div class="p-1 px-2" id="stats">
+            <p style="font-weight: 400;font-size: 12px;">{{p.shares}} <i class="fa fa-eye" style="color: rgb(0, 255, 238); font-size: 16px;"></i> </p>
+          </div>
+        {% else %}
+        {% endif %}
+        </div>
+          <div class="line" style="border-top: 1px solid #e4e4e487;"></div>
+        </div>
+          
+        <div style="display: flex;flex-direction: row;font-weight:100; width: 500px; font-size: 12px;" class="ans-btn mb-3 col-md-12" id="info1">
+          <div class="p-1 px-2" style="margin-right: 20px;">
+            {% if user.is_authenticated %}
+            <a href="?isPost=True&id={{p.pk}}&action_type=like&page={{all_posts.number}}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-heart" style="font-size: 16px;"></i> Like</a>
+            {% else %}
+            <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-heart" style="font-size: 16px;"></i> Like</a>
+            {% endif %}
+          </div>
+          <div class="p-1 px-2 comment" style="margin-right: 20px;">
+            <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-comments-o" style="font-size: 16px;"></i> Comment</a>
+          </div>
+          <div class="p-1 px-2 share" >
+            {% if user.is_authenticated %}
+            <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-eye" style="font-size: 16px"></i> Views</a>
+            {% else %}
+            <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-eye" style="font-size:16px"></i> Views</a>
+            {% endif %}
+          </div>
+        
+          {% if p.likes.count > 0 %}
+          <div class="p-1 px-2 sts" style="margin-left:78px">
+            <p class="p-1 px-2" style="margin-top: -8px;font-weight: 400;font-size: 13px;cursor: unset;">{{p.likes.count}} <i class="fa fa-heart" style="color: rgb(252, 7, 7);font-size: 16px;"></i></p>
+          </div>
+          {% else %}
+          {% endif %}
+
+          {% if p.comments.count > 0 %}
+          <div class="p-1 px-2 sts" style="padding-right: 0;">
+           <p class="p-1 px-2" style="margin-top: -8px;font-weight: 400;font-size: 13px;cursor: unset;">{{p.comments.count}} <i class="fa fa-comments" style="color: rgb(255, 0, 255); font-size: 16px;"></i></p>
+          </div>
+          {% else %}
+          {% endif %}
+          
+          {% if p.shares > 0 %}
+          <div class="p-1 px-2 sts" style="padding-right: 0;">
+            <p class="p-1 px-2" style="margin-top: -8px;font-weight: 400;font-size: 13px;cursor: unset;">{{p.shares}} <i class="fa fa-eye" style="color: rgb(0, 255, 238); font-size: 16px;"></i></p>
+           </div>
+           {% else %}
+           {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}

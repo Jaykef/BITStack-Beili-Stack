@@ -1,0 +1,68 @@
+{% extends 'main/base4.html' %}
+
+{% block content %}
+
+      <script type="text/javascript">
+          function showanswerbox(selfans){
+            console.log(selfans.checked)
+            var showanswerboxnow = document.getElementById("wans");
+            showanswerboxnow.style.display = selfans.checked ? "block" : "none";
+          }
+      </script>
+
+          <div class = "container">
+              <div class= "row">
+
+
+                <div class="col-12 col-md-9 mt-3">
+
+                <form method="POST">
+                  {% csrf_token %}
+                  <div class="card" style="border-radius: 0.7rem;">
+                    <div class="card-body">
+                      <h2 class="card-title" style="font-weight: 700;color: black;">Title</h2>
+                      <p class="card-text">Be specific and imagine you’re asking a question to another person.</p>
+                      <textarea name='title' style="width:100%;border-radius: 0.5rem;"></textarea>
+                      
+                      <h2 class="card-title mt-2" style="font-weight: 700;color: black;">Body</h2>
+                      <p class="card-text">Include all the information someone would need to answer your question.</p>
+                      <textarea name="queseditor" style="border-radius: .5rem;"></textarea>
+                      <script>
+                              CKEDITOR.replace( 'queseditor' );
+                      </script>
+                      <h2 class="card-title mt-3" style="font-weight: 700;color: black;">Tags</h2>
+                      <p class="card-text">Add multiple tags separated comma.</p>
+                      <textarea name='tags' style="width:100%; border-radius: 0.5rem;"></textarea>
+
+                      <input type="checkbox" id="selfanswer" name="selfanswer" onclick="showanswerbox(this)" value="">
+                      <label for="selfanswer"> <strong> Answer your own question </strong> – share your knowledge, Q&A-style</label><br>
+
+                      <div id="wans" style="display: none">
+                        <h5 class="card-title">Your Answer</h5>
+                        <textarea name="selfanswereditor"></textarea>
+                        <script>
+                                CKEDITOR.replace( 'selfanswereditor' );
+                        </script>
+                      </div>
+                      <button style="width:100%; float: right; width: 150px;"; class="btn btn-success btn-sm p-2 mt-2 mb-2" type="submit"> Submit Question</button>
+                
+                    </div>
+                  </div>
+
+                  </form>
+
+
+                </div>
+            
+                
+              </div>
+                
+
+              </div>
+
+          </div>
+          
+{% endblock %}
+ 
+
+

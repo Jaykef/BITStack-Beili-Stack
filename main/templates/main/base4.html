@@ -1,0 +1,422 @@
+{% load static %}
+<!--
+=========================================================
+* * University Student Dashboard - v1.0.1
+========================================================
+
+* Product Page: https://www.jaykef.com
+* Copyright 2021 (https://www.jaykef.com)
+
+
+* Coded by 苏杰 Jaykef
+
+========================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static './assets/img/apple-icon.png' %}">
+  <link rel="icon" type="image/png" href="{% static './assets/img/favicon.png' %}">
+  <title>
+    BIT Stack | Beijing Institute of Technology
+  </title>
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
+  <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <!-- Nucleo Icons -->
+  <link href="{% static './assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+  <!-- CSS Files -->
+  <link href="{% static './assets/css/master.css' %}" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="{% static './assets/demo/demo.css' %}" rel="stylesheet" />
+  <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+</head>
+
+<style>.white-content .sidebar .nav li.active > a:not([data-toggle="collapse"]),
+  .off-canvas-sidebar .nav li.active > a:not([data-toggle="collapse"]) {
+    background: #ffffff !important;
+    box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
+  }
+  @media screen and (max-width: 991px) {
+    .navbar .navbar-brand p{
+        font-size: 6.7px;
+      }
+  }</style>
+  <script>
+    function comeToTheDarkside() {
+      var isChecked = document.getElementById('customSwitch1').checked
+      if(isChecked){
+        document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+        document.body.querySelectorAll('img, picture, video, .cover')
+        .forEach(el => el.style.filter = 'invert(1) hue-rotate(180deg)');
+        localStorage.setItem('mode','dark')
+      }
+      else{
+        document.documentElement.style.filter = null;
+        document.body.querySelectorAll('img, picture, video, .cover')
+        .forEach(el => el.style.filter = null);
+        localStorage.setItem('mode','light')
+      }
+      
+    }
+    $(document).ready(function(){
+      
+      if(localStorage.getItem('mode') === "dark"){
+        document.getElementById('customSwitch1').checked = true
+        comeToTheDarkside()
+      }
+      else{
+        document.getElementById('customSwitch1').checked = false
+      } 
+    });
+    // comeToTheDarkside()
+  </script>
+<body class="">
+  <div class="wrapper">
+    <div class="sidebar">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+     -->
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="active">
+            <a href="{% url 'name_questions' %}">
+              <i class="fa fa-th-large pt-1" style="color: orange;"></i>
+              <h4 id="wc">Questions</h4>
+            </a>
+          </li>
+          <li class="active">
+            <a href="{% url 'name_posts' %}">
+              <i class="fa fa-th-list pt-1" style="color: rgb(245, 65, 143);"></i>
+              <h4 id="wc">Posts Feed</h4>
+            </a>
+          </li>
+          <li class="active">
+            <a href="{% url 'name_questions' %}">
+              <i class="fa fa-stack-overflow pt-1" style="color: violet;"></i>
+              <h4 id="wc">Stacks</h4>
+            </a>
+          </li>
+          <div class="logo">
+          </div>
+          <li>
+            <a href="">
+              <h4 id="wc">Recently Read</h4>
+            </a>
+          </li>
+          <li>
+            <a href="card.html">
+              <span style="display: inline-flex;" class="px-2">
+                <img src="{% static './assets/img/03.jpg' %}" width="70" height="40">
+                <p class="px-1" style="font-size: 13px;">Data Structures and Algorithms Autumn Quiz.</p>
+              </span>
+            </a>
+            <a href="card.html">
+              <span style="display: inline-flex;" class="px-2">
+                <img src="{% static './assets/img/02.jpg' %}" width="70" height="40">
+                <p class="px-1" style="font-size: 13px;">Data Structures and Algorithms Autumn Quiz.</p>
+              </span>
+            </a>
+            <a href="card.html">
+              <span style="display: inline-flex;" class="px-2">
+                <img src="{% static './assets/img/01.jpg' %}" width="70" height="40">
+                <p class="px-1" style="font-size: 13px;">Data Structures and Algorithms Autumn Quiz.</p>
+              </span>
+            </a>
+          </li>
+          
+          <li class="active-pro" style="margin-left: 28px;">
+            <p class="p-1">With ❤️ by <strong>Jaykef(苏杰)</strong></p>
+              <i class="fa fa-coffee pt-1" style="color: rgb(255, 151, 72);font-size: 25px;"></i>
+              <button class="btn btn-success p-2 m-0">Buy me a coffee</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent ">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <div class="navbar-toggle d-inline">
+              <button type="button" class="navbar-toggler">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </button>
+            </div>
+            <img src="{% static './assets/img/logo.png' %}" width="50" height="50" class="logo">
+            <a class="navbar-brand" href="{% url 'name_questions' %}">BIT Stack <br>
+              <p>Beijing Institute of Technology</p>
+            </a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+            <span class="navbar-toggler-bar navbar-kebab"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navigation">
+            <ul class="navbar-nav ml-auto">
+              <!-- <li class="search-bar input-group">
+                <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i
+                    class="fa fa-search pt-2"></i>
+                  <span class="d-lg-none d-md-block">Search</span>
+                </button>
+              </li> -->
+
+              {% if user.is_authenticated %}
+              <li class="dropdown nav-item">
+                <a href="{% url 'name_profile' user.username %}" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                  <a href="{% url 'name_profile' user.username %}">
+                    <div class="photo">
+                      <img src="{{user.profile_pic.url}}" alt="Profile Photo">
+                    </div>
+                  </a>
+                  <li class="user">
+                    <span>{{name}}<br>{{reputation_score}}</span>
+                  </li>
+                </a>
+              <a class="nav-item nav-link" href="{% url 'name_profile' user.username %}"><strong>{{user.username}}</strong></a>
+              <div style="float: right; display: flex;justify-content: end;align-items: center;" class=" custom-control custom-switch">
+                <div>
+                  <input onchange="comeToTheDarkside()" type="checkbox" class="custom-control-input" id="customSwitch1">
+                  <label class="custom-control-label" for="customSwitch1"></label>
+                </div>
+              </div>
+              <a class="nav-item nav-link" href="{% url 'name_logout_req' %}"><strong>Logout</strong></a>
+              {% else %}
+              <a class="nav-item nav-link" href="{% url 'name_login_req' %}"><strong>Login</strong></a>
+              <a class="nav-item nav-link" href="{% url 'name_signup' %}"><strong>Register</strong></a>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="SEARCH">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <i class="tim-icons icon-simple-remove"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Navbar -->
+      <div class="content mt-4">
+        <div class="row" style="max-width: 900px;">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="col-md-9 mb-3">
+                <div class="card alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert" style="background-color: rgba(5, 147, 73, 1);">
+                <strong></strong> {{ message }}
+                <button type="button" class="close mt-1" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true" class="mt-2 px-0">&times;</span>
+                </button>
+                </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            {% block content %}
+
+            {% endblock %}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar1">
+      <div class="sidebar-wrapper1 mt-4" >
+        {% if user.is_authenticated %}
+        <div class="card text-center pb-3">
+          <ul class="nav1 p-0 m-0">
+              <img src="{{user.cover_pic.url}}" style="margin-top: 0;" class="pb-2">
+              <a href="{% url 'name_profile' user.username %}">
+                <span class="photo" style="display: inline-flex;">
+                  <img style="margin-top: -40px;border-radius: 4rem; border:3px solid;" src="{{user.profile_pic.url}}" alt="Profile Photo" width="70" height="70">
+                </span>
+                <h4 class="p-0 m-1" >{{user.username}}</h4>
+                <p style="font-size: 12px;">{{user.about_me}}</p>
+              </a>
+              <p class="btn btn-success btn-sm" style="font-size: 10px; color: white;cursor: unset;">Reputation {{user.reputation_score}}</p>
+          </ul>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="fixed-plugin">
+    <div class="dropdown show-dropdown">
+      <a href="#" data-toggle="dropdown">
+        <i class="fa fa-moon"> </i>
+      </a>
+      <ul class="dropdown-menu">
+        <li class="header-title"> Sidebar Theme </li>
+        <!-- <li class="adjustments-line text-center">
+          <a href="javascript:void(0)" class="switch-trigger background-color">
+            <div class="badge-colors text-center">
+              <span class="badge filter badge-primary active" data-color="primary"></span>
+              <span class="badge filter badge-info" data-color="white"></span>
+              <span class="badge filter badge-success" data-color="green"></span>
+            </div>
+            <div class="clearfix"></div>
+          </a>
+        </li> -->
+        <li class="adjustments-line text-center color-change">
+          <span class="color-label">LIGHT MODE</span>
+          <span class="badge light-badge mr-2"></span>
+          <span class="badge dark-badge ml-2"></span>
+          <span class="color-label">DARK MODE</span>
+        </li>
+        <li class="header-title pb-5">©️ 2021 By Jaykef</li>
+      </ul>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="{% static './assets/js/core/jquery.min.js' %}"></script>
+  <script src="{% static './assets/js/core/popper.min.js' %}"></script>
+  <script src="{% static './assets/js/core/bootstrap.min.js' %}"></script>
+  <script src="{% static './assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+  <!--  Google Maps Plugin    -->
+  <!--
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
+  <!-- Chart JS -->
+  <script src="{% static './assets/js/plugins/chartjs.min.js' %}"></script>
+  <!--  Notifications Plugin    -->
+  <script src="{% static './assets/js/plugins/bootstrap-notify.js' %}"></script>
+  <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="{% static './assets/js/black-dashboard.min.js' %}"></script>
+  <!-- Black Dashboard DEMO methods, don't include it in your project! -->
+  <script src="https://use.fontawesome.com/6f7dfef630.js"></script>
+  <script>
+    $(document).ready(function () {
+      $().ready(function () {
+        $sidebar = $('.sidebar');
+        $navbar = $('.navbar');
+        $main_panel = $('.main-panel');
+
+        $full_page = $('.full-page');
+
+        $sidebar_responsive = $('body > .navbar-collapse');
+        sidebar_mini_active = true;
+        white_color = false;
+
+        window_width = $(window).width();
+
+        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+
+
+
+        $('.fixed-plugin a').click(function (event) {
+          if ($(this).hasClass('switch-trigger')) {
+            if (event.stopPropagation) {
+              event.stopPropagation();
+            } else if (window.event) {
+              window.event.cancelBubble = true;
+            }
+          }
+        });
+
+        $('.fixed-plugin .background-color span').click(function () {
+          $(this).siblings().removeClass('active');
+          $(this).addClass('active');
+
+          var new_color = $(this).data('color');
+
+          if ($sidebar.length != 0) {
+            $sidebar.attr('data', new_color);
+          }
+
+          if ($main_panel.length != 0) {
+            $main_panel.attr('data', new_color);
+          }
+
+          if ($full_page.length != 0) {
+            $full_page.attr('filter-color', new_color);
+          }
+
+          if ($sidebar_responsive.length != 0) {
+            $sidebar_responsive.attr('data', new_color);
+          }
+        });
+
+        $('.switch-sidebar-mini input').on("switchChange.bootstrapSwitch", function () {
+          var $btn = $(this);
+
+          if (sidebar_mini_active == true) {
+            $('body').removeClass('sidebar-mini');
+            sidebar_mini_active = false;
+            blackDashboard.showSidebarMessage('Sidebar mini deactivated...');
+          } else {
+            $('body').addClass('sidebar-mini');
+            sidebar_mini_active = true;
+            blackDashboard.showSidebarMessage('Sidebar mini activated...');
+          }
+
+          // we simulate the window Resize so the charts will get updated in realtime.
+          var simulateWindowResize = setInterval(function () {
+            window.dispatchEvent(new Event('resize'));
+          }, 180);
+
+          // we stop the simulation of Window Resize after the animations are completed
+          setTimeout(function () {
+            clearInterval(simulateWindowResize);
+          }, 1000);
+        });
+
+        $('.switch-change-color input').on("switchChange.bootstrapSwitch", function () {
+          var $btn = $(this);
+
+          if (white_color == true) {
+
+            $('body').addClass('change-background');
+            setTimeout(function () {
+              $('body').removeClass('change-background');
+              $('body').removeClass('white-content');
+            }, 900);
+            white_color = false;
+          } else {
+
+            $('body').addClass('change-background');
+            setTimeout(function () {
+              $('body').removeClass('change-background');
+              $('body').addClass('white-content');
+            }, 900);
+
+            white_color = true;
+          }
+
+
+        });
+
+        $('.light-badge').click(function () {
+          $('body').addClass('white-content');
+        });
+
+        $('.dark-badge').click(function () {
+          $('body').removeClass('white-content');
+        });
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+      // Javascript method's body can be found in assets/js/demos.js
+      demo.initDashboardPageCharts();
+
+    });
+  </script>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+</body>
+
+</html>

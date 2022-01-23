@@ -1,0 +1,232 @@
+{% extends 'main/base2.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+<style>
+  .qa {
+    margin-top: ;
+  }
+
+  @media screen and (max-width: 776px) {
+
+    .col-md-4,
+    .col-md-8 {
+      padding: 0px;
+      margin: 25px 0px 0px 0px
+    }
+
+    .col-md-4 {
+      background: transparent
+    }
+  }
+</style>
+<div class="col-md-10 m-0">
+  <div class="cover" style="height: 380px;background-size: cover; background-image: url({{seeuser.cover_pic.url}}); 
+          margin-top: -100px; 
+          border-radius: 1rem;
+          box-shadow: rgba(199, 199, 199, 0.872);">
+  </div>
+  <div class="row mt-2 m-1">
+    <!-- Question Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content" style="margin-top: -200px;">
+        <div class="modal-header" style="border-bottom: 1px solid #6972806d;">
+          <h3 class="modal-title content-title" id="exampleModalLongTitle">Ask Question
+          </h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" style="margin-top: -10px;">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="card" style="border-radius: 0.7rem;">
+              <div class="card-body">
+                <h2 class="card-title" style="font-weight: 700;color: black;">Title</h2>
+                <p class="card-text">Question title should be simple, specific and on-point</p>
+                <textarea name='title' style="width:100%;border-radius: 0.5rem;"></textarea>
+
+                <h2 class="card-title mt-2" style="font-weight: 700;color: black;">Body</h2>
+                <p class="card-text">Include all the information someone would need to answer your question.</p>
+                <textarea name="queseditor" style="border-radius: .5rem;"></textarea>
+                <script>
+                  CKEDITOR.replace('queseditor');
+                </script>
+                <h2 class="card-title mt-3" style="font-weight: 700;color: black;">Tags</h2>
+                <p class="card-text">Add multiple tags separated comma.</p>
+                <textarea name='tags' style="width:100%; border-radius: 0.5rem;"></textarea>
+
+                <input type="checkbox" id="selfanswer" name="selfanswer" onclick="showanswerbox(this)" value="">
+                <label for="selfanswer" style="color: black;"> <strong> Answer your own question </strong> – share
+                  your
+                  knowledge,
+                  Q&A-style</label><br>
+
+                <div id="wans" style="display: none">
+                  <h5 class="card-title">Your Answer</h5>
+                  <textarea name="selfanswereditor"></textarea>
+                  <script>
+                    CKEDITOR.replace('selfanswereditor');
+                  </script>
+                </div>
+                <button style="width:100%; float: right; width: 150px;" ;
+                  class="btn btn-success btn-sm p-2 mt-2 mb-2" type="submit"> Submit Question</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+    <div class="col-md-4 m-0 mt-5" style="border: 0.5px solid rgba(80, 80, 80, 0.235); border-radius: 1rem;">
+      <div class="pt-1 text-center" style="margin-top:-200px;">
+        <img class="img" style="border-radius: 15rem;border: 5px solid #fff; width: 180px;height: 180px;"
+          src="{{seeuser.profile_pic.url}}" alt="...">
+      </div>
+      <div class="pt-4 text-center">
+        <div style="position: relative;" class="card-body">
+
+          <h3 class="card-title" style="color:rgb(0, 0, 0);">{{seeuser.name}}</h3>
+          <h4 class="card-title" style="color:rgb(0, 0, 0);margin-top: -15px;">{{seeuser.username}}</h4>
+          {% if showeditbutton %}
+          <div style="position: absolute; top: 3px;right: 3px;">
+            <h3 style="display:inline-flex;"><a href="{% url 'name_editprofile' %}"><i class="fa fa-edit"></i></a></h3>
+          </div>
+          {% endif %}
+          <p class="card-text">{{seeuser.about_me}}</p>
+          {% if seeuser.reputation_score > 50 %}
+          <p class="btn btn-success btn-sm" style="cursor:unset;">Reputations {{seeuser.reputation_score}}</p>
+          <p class="btn btn-primary btn-sm" style="cursor:unset;">UpVotes {{uservotes.count}}</p>
+          <p class="btn btn-warning btn-sm" style="cursor:unset;">Questions {{userques.count}}</p>
+          <p class="btn btn-success btn-sm" style="cursor:unset;">Answers {{ansgiven.count}}</p>
+          {% else %}
+          <p class="btn btn-warning btn-sm" style="cursor:unset;">Reputations {{seeuser.reputation_score}}</p>
+          <p class="btn btn-primary btn-sm" style="cursor:unset;">UpVotes {{uservotes.count}}</p>
+          <p class="btn btn-warning btn-sm" style="cursor:unset;">Questions {{userques.count}}</p>
+          <p class="btn btn-success btn-sm" style="cursor:unset;">Answers {{ansgiven.count}}</p>
+          {% endif %}
+          {% if showeditbutton %}
+          <div class="create pt-2 pb-3" style="display: flex;flex-direction: row; justify-content: center;">
+           <span class="pt-1"><button type="button" class="btn btn-success" data-toggle="modal"
+              data-target="#exampleModalCenter"
+                style="font-size: 12px;border:1px solid rgba(255, 255, 255, 0.427); border-radius: .5rem;">Ask a
+                Question</button></span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8 row mb-2 mx-0 qa">
+      <div class="col-md-6">
+        <h4 class="text-center p-3" style="border-bottom: 0.5px solid rgba(80, 80, 80, 0.317); font-weight: 600;">
+          Questions
+        </h4>
+        <!-- <div style="display: flex;flex-direction: row;justify-content: end;">
+            <nav aria-label="">
+                <ul class="pagination pagination-md">
+                  <li class="page-item active" aria-current="page">
+                    <span class="page-link">
+                      Newest
+                      <span class="sr-only">(current)</span>
+                    </span>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">Votes</a></li>
+                </ul>
+            </nav>
+        </div> -->
+        <style>
+          .white-content #ques {
+            border: 0.5px solid rgba(80, 80, 80, 0.317);
+            border-radius: 0.5rem;
+          }
+
+          #ques {
+            border: 0.5px solid rgba(80, 80, 80, 0.317);
+            border-radius: 0.5rem;
+          }
+        </style>
+        <div>
+          {% for q in userques %}
+          <div class="mt-3 mb-2 p-3 " id="ques">
+            <a href="{% url 'name_questionsingle' q.pk %}" style="font-size: 18px;">
+              {{q.title}}
+            </a><br>
+            {% if q.votes > 1 %}
+            <p style="float:left; font-size: 10px; font-weight: 500;" class="mt-2 badge btn-success">{{q.votes}} Votes
+            </p>
+            <p style="float:right; font-size: 10px;" class="mt-2 pt-1">asked {{q.created_at|naturaltime}}</p>
+            {% elif q.votes == 1 %}
+            <p style="float:left; font-size: 10px; font-weight: 500;" class="mt-2 badge btn-warning">{{q.votes}} Vote
+            </p>
+            <p style="float:right; font-size: 10px;" class="mt-2 pt-1">asked {{q.created_at|naturaltime}}</p>
+            {% else %}
+            <p style="float:left; font-size: 10px; font-weight: 500;" class="mt-2 badge btn-danger">{{q.votes}} Vote</p>
+            <p style="float:right; font-size: 10px;" class="mt-2 pt-1">asked {{q.created_at|naturaltime}}</p>
+            {% endif %}
+            <p style="font-size: 10px; font-weight: 500;margin-left: 4px;" class="badge btn-primary mt-2">{{q.views}} <i
+                class="fa fa-eye"></i></p>
+            {% if q.answers.count > 1 %}
+            <p style="font-size: 10px; font-weight: 500;background-color: rgb(208, 119, 3);" class="badge mt-2">
+              {{q.answers.all.count}} ans</p>
+            {% else %}
+            <p style="font-size: 10px; font-weight: 500;background-color: rgb(208, 119, 3);" class="badge mt-2">
+              {{q.answers.all.count}} ans</p>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h4 class="text-center p-3 mb-0" style=" border-bottom: 0.5px solid rgba(80, 80, 80, 0.317);font-weight: 600;">
+          Answers
+        </h4>
+        <!-- <div style="display: flex;flex-direction: row;justify-content: end;">
+                        <nav aria-label="">
+                            <ul class="pagination pagination-md">
+                              <li class="page-item active" aria-current="page">
+                                <span class="page-link">
+                                  Newest
+                                  <span class="sr-only">(current)</span>
+                                </span>
+                              </li>
+                              <li class="page-item"><a class="page-link" href="#">Votes</a></li>
+                            </ul>
+                        </nav>
+                    </div> -->
+
+        {% for a in ansgiven %}
+        <div class="mt-3 p-3 mb-2" id="ques">
+          {% if a.is_accepted %}
+          <p style="margin-left: 4px;float: right;" class=""><img src="{% static './assets/img/correct.png' %}"
+              style="width: 30px;"></p>
+          {% endif %}
+          <a href="{% url 'name_questionsingle' a.question_to_ans.pk %}" style="font-size: 18px;">
+            {{a.question_to_ans.title}}
+          </a><br>
+          {% if q.votes > 1 %}
+          <p style="float:left; font-size: 10px; font-weight: 500;" class="mt-2 badge btn-success">{{q.votes}} Votes</p>
+          <p style="float:right; font-size: 10px;" class="mt-2 pt-1">answered {{a.created_at|naturaltime}}</p>
+          {% elif a.votes == 1 %}
+          <p style="float:left; font-size: 10px; font-weight: 500;" class="mt-2 badge btn-warning">{{a.votes}} Vote</p>
+          <p style="float:right; font-size: 10px;" class="mt-2 pt-1">answered {{a.created_at|naturaltime}}</p>
+          {% else %}
+          <p style="float:left; font-size: 10px; font-weight: 500;" class="mt-2 badge btn-danger">{{a.votes}} Vote</p>
+          <p style="float:right; font-size: 10px;" class="mt-2 pt-1">answered {{a.created_at|naturaltime}}</p>
+          {% endif %}
+          <p style="font-size: 10px; font-weight: 500;margin-left: 4px;" class="badge btn-primary mt-2">{{q.views}} <i
+              class="fa fa-eye"></i></p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
