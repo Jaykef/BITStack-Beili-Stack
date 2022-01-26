@@ -9,6 +9,11 @@
         $("#fileInput").click();
     }
   </script>
+  
+  <style>
+    .form-control:focus {
+      color: #020202;
+      }</style>
 <form method = "POST" enctype="multipart/form-data" > 
     {% csrf_token %}
   <div class="col" style="margin-right: 15px;">
