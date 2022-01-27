@@ -231,7 +231,7 @@
           {% if a.answered_by == user %}
           <div class="col-md-12 mt-2 ml-3" style="position: absolute;z-index: 99;">
             <a class="fa fa-times btn-sm" style="float: right; font-size: 18px;"
-              href="{% url 'question_deleted' q.id %}"></a>
+              href="{% url 'answer_deleted' a.id %}"></a>
           </div>
           {% endif %}
           <div class="col-md-12 mt-3" style="justify-content: center;">
