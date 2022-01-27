@@ -18,6 +18,7 @@ urlpatterns = [
     path('question/<int:pk>/<int:pk2>/', views.is_accepted, name = 'name_is_accepted'),
     path('post_deleted/<int:id>', views.delete_post, name = 'post_deleted'),
     path('question_deleted/<int:id>', views.delete_quest, name = 'question_deleted'),
+    path('answer_deleted/<int:id>', views.delete_answer, name = 'answer_deleted'),
     path('comment_deleted/<int:id>', views.delete_comment, name = 'comment_deleted'),
     path('thumbs/', views.thumbs, name='thumbs'),
     path('like/', views.like, name='like'),
