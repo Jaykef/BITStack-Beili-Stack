@@ -115,7 +115,7 @@
     {% for p in all_posts %}
     <div class="card mt-2">
       {% if p.author == user %}
-      <div class="col-md-12 mt-3" style="position: absolute;">
+      <div class="col-md-12 mt-3" style="position: absolute;z-index: 1;" >
        <a class="fa fa-times btn-sm" style="float: right; font-size: 18px;z-index: 999;"  href="{% url 'post_deleted' p.id %}"></a>
       </div>
       {% endif %}
