@@ -1,14 +1,15 @@
 {% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
 <!--
 =========================================================
-* * University Student Dashboard - v1.0.1
+* * University Stack Web App - v1.0.1
 ========================================================
 
 * Product Page: https://www.jaykef.com
 * Copyright 2021 (https://www.jaykef.com)
 
-
-* Jaward Sesay (Jaykef 苏杰)
+* Jaward Sesay (苏杰)
 
 ========================================================
 -->
@@ -26,6 +27,9 @@
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
   <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
   <!-- Nucleo Icons -->
   <link href="{% static './assets/css/nucleo-icons.css' %}" rel="stylesheet" />
   <!-- CSS Files -->
@@ -34,54 +38,146 @@
   <link href="{% static './assets/demo/demo.css' %}" rel="stylesheet" />
   <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 </head>
-
-<body class="">
-  <style>
-  .white-content .sidebar .nav li.active > a:not([data-toggle="collapse"]),
-  .off-canvas-sidebar .nav li.active > a:not([data-toggle="collapse"]) {
+<style>
+  .white-content .sidebar .nav li.active>a:not([data-toggle="collapse"]),
+  .off-canvas-sidebar .nav li.active>a:not([data-toggle="collapse"]) {
     background: #ffffff !important;
     box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
   }
-  .main-panel > .content {
-    padding: 78px 40px 30px 230px;} 
-    @media screen and (max-width: 776px){
-      .main-panel > .content {
-    padding: 15px;}
+  #profile{
+    display: none;
+  }
+
+  @media screen and (max-width: 991px) {
+    a.navbar-brand {
+      text-align: center;
+    }
     .navbar .navbar-brand p{
         font-size: 6.7px;
       }
 
-    }</style>
-    <script>
-      function comeToTheDarkside() {
-        var isChecked = document.getElementById('customSwitch1').checked
-        if(isChecked){
-          document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
-          document.body.querySelectorAll('img, picture, video, .cover')
-          .forEach(el => el.style.filter = 'invert(1) hue-rotate(180deg)');
-          localStorage.setItem('mode','dark')
-        }
-        else{
-          document.documentElement.style.filter = null;
-          document.body.querySelectorAll('img, picture, video, .cover')
-          .forEach(el => el.style.filter = null);
-          localStorage.setItem('mode','light')
-        }
-        
-      }
-      $(document).ready(function(){
-        
-        if(localStorage.getItem('mode') === "dark"){
-          document.getElementById('customSwitch1').checked = true
-          comeToTheDarkside()
-        }
-        else{
-          document.getElementById('customSwitch1').checked = false
-        } 
-      });
-      // comeToTheDarkside()
-    </script>
+    img.logo {
+      margin-left: 45px;
+    }
+    #profile {
+      display: block;
+    }
+  }
+</style>
+<script>
+  function comeToTheDarkside() {
+    var isChecked = document.getElementById('customSwitch1').checked
+    if (isChecked) {
+      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+      document.body.querySelectorAll('img, picture, video')
+        .forEach(el => el.style.filter = 'invert(1) hue-rotate(180deg)');
+      localStorage.setItem('mode', 'dark')
+    }
+    else {
+      document.documentElement.style.filter = null;
+      document.body.querySelectorAll('img, picture, video')
+        .forEach(el => el.style.filter = null);
+      localStorage.setItem('mode', 'light')
+    }
+
+  }
+  $(document).ready(function () {
+
+    if (localStorage.getItem('mode') === "dark") {
+      document.getElementById('customSwitch1').checked = true
+      comeToTheDarkside()
+    }
+    else {
+      document.getElementById('customSwitch1').checked = false
+    }
+  });
+    // comeToTheDarkside()
+</script>
+
+<body class="">
   <div class="wrapper">
+    <div class="sidebar">
+      <!--
+        Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+     -->
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          {% if user.is_authenticated %}
+          <div class="nav1 mt-5 pt-2 p-0 m-2 text-center" id="profile">
+            <a href="{% url 'name_profile' user.username %}">
+              <span class="photo" style="display: inline-flex;">
+                <img style="margin-top: -40px;border-radius: 100%; border:8px solid #000000;" src="{{user.profile_pic.url}}"
+                  alt="Profile Photo" width="120" height="120">
+              </span>
+              <h4 class="p-0 m-1">{{user.username}}</h4>
+              <p style="font-size: 12px;">{{user.about_me}}</p>
+            </a>
+            <p class="btn btn-success btn-sm" style="font-size: 10px; color: white;cursor: unset;">Stacker Reputation
+              {{user.reputation_score}}</p>
+            </div>
+        {% else %}
+        {% endif %}
+          <li class="active">
+            <a href="{% url 'name_questions' %}">
+              <i class="fa fa-th-large pt-1" style="color: orange;"></i>
+              <h4 id="wc">Questions</h4>
+            </a>
+          </li>
+          <li class="active">
+            <a href="{% url 'name_posts' %}">
+              <i class="fa fa-th-list pt-1" style="color: rgb(245, 65, 143);"></i>
+              <h4 id="wc">Posts Feed</h4>
+            </a>
+          </li>
+          <li class="active">
+            <a href="{% url 'name_questions' %}">
+              <i class="fa fa-stack-overflow pt-1" style="color: violet;"></i>
+              <h4 id="wc">Stacks</h4>
+            </a>
+          </li>
+          <div class="logo">
+          </div>
+          {% if user.is_authenticated %}
+          <li style="margin-top: -20px;">
+            <a href="">
+              <h4 id="wc">Recent Posts</h4>
+            </a>
+          </li>
+            {% for p in userposts|slice:"3" %}
+            <a href="{% url 'name_postdetail' p.pk %}">
+              <span style="display: inline-flex;margin-left: 18px;" class="px-2">
+                <img src="{{p.author.profile_pic.url}}" width="40" height="40">
+                <p class="px-1" style="font-size: 13px;">{{p.post_content}} {{p.posted_at|naturaltime}}</p>
+              </span>
+            </a>
+            {% endfor %}
+            {% else %}
+            {% endif %}
+          <!-- <style>li a:hover{background: transparent; }</style>
+          <li style="margin-top: -20px;">
+            <a href="" class="ab">
+              <i class="fa fa-stack-overflow pt-1" style="color: violet;"></i>
+              <h4 id="wc">About BITStack</h4>
+            </a>
+            <a href="">
+              <i class="fa fa-stack-overflow pt-1" style="color: violet;"></i>
+              <h4 id="wc">Support BITStack</h4>
+            </a>
+            <a href="">
+              <i class="fa fa-stack-overflow pt-1" style="color: violet;"></i>
+              <h4 id="wc">FAQ</h4>
+            </a>
+          </li> -->
+
+          <li class="active-pro" style="margin-left: 28px;">
+            <p class="p-1">With ❤️ by <strong>Jaykef(苏杰)</strong></p>
+            <i class="fa fa-coffee pt-1" style="color: rgb(3, 118, 87);font-size: 25px;"></i>
+            <button class="btn btn-success p-2 m-0" data-toggle="modal" data-target="#coffeeModalCenter">Buy me
+              coffee</button>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div class="main-panel">
       <!-- Navbar -->
       <nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent ">
@@ -116,31 +212,48 @@
 
               {% if user.is_authenticated %}
               <li class="dropdown nav-item">
-                <a href="{% url 'name_profile' user.username %}" class="dropdown-toggle nav-link" data-toggle="dropdown">
-                  <a href="{% url 'name_profile' user.username %}" >
+                <a href="{% url 'name_profile' user.username %}" class="dropdown-toggle nav-link"
+                  data-toggle="dropdown">
+                  <a href="{% url 'name_profile' user.username %}">
                     <div class="photo">
                       <img src="{{user.profile_pic.url}}" alt="Profile Photo">
                     </div>
                   </a>
-                  <a href="{% url 'name_profile' user.username %}" >
-                    <li class="user px-2 pt-2">
-                      <span style="color: black;">{{user.username}}</span>
-                    </li>
-                  </a>
-                </a>
+              <li class="user">
+                <span>{{name}}</span>
+              </li>
+              </a>
+              <a class="nav-item nav-link"
+                href="{% url 'name_profile' user.username %}"><strong>{{user.username}}</strong></a>
 
-              <div style="float: right; display: flex;justify-content: end;align-items: center;" class=" custom-control custom-switch">
+              <div style="float: right; display: flex;justify-content: end;align-items: center;"
+                class=" custom-control custom-switch">
                 <div>
                   <input onchange="comeToTheDarkside()" type="checkbox" class="custom-control-input" id="customSwitch1">
                   <label class="custom-control-label" for="customSwitch1"></label>
                 </div>
               </div>
               <a class="nav-item nav-link" href="{% url 'name_logout_req' %}"><strong>Logout</strong></a>
-              
               {% else %}
-              <a class="nav-item nav-link" href="{% url 'name_login_req' %}"><strong>Login</strong></a>
-              <a class="nav-item nav-link" href="{% url 'name_signup' %}"><strong>Register</strong></a>
+              <div style="float: right; display: flex;justify-content: end;align-items: center;"
+                class=" custom-control custom-switch">
+                <div>
+                  <input onchange="comeToTheDarkside()" type="checkbox" class="custom-control-input" id="customSwitch1">
+                  <label class="custom-control-label" for="customSwitch1"></label>
+                </div>
+              </div>
+              <button onclick="location.href='{% url 'name_login_req' %}'" style="float: right;" type="button"
+                class="btn btn-success px-4 my-1">
+                Login
+              </button>
+              <button onclick="location.href='{% url 'name_signup' %}'" style="float: right;" type="button"
+                class="btn btn-success px-4 my-1">
+                SignUp
+              </button>
               {% endif %}
+
+              <button class="coffee-modal btn btn-success p-2 m-0 my-1" data-toggle="modal"
+                data-target="#coffeeModalCenter">Buy Jay coffee</button>
             </ul>
           </div>
         </div>
@@ -160,30 +273,55 @@
       </div>
       <!-- End Navbar -->
       <div class="content mt-4">
-        <div class="row">
-            {% if messages %}
-            {% for message in messages %}
-            <div class="mb-3">
-                <div class="card alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert" style="background-color: rgba(5, 147, 73, 0.6);">
-                <strong></strong> {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true" class="mt-2 px-0">&times;</span>
-                </button>
-                </div>
+        <div class="row" style="max-width: 1080px;">
+          {% if messages %}
+          {% for message in messages %}
+          <div class="col-md-9 mb-3">
+            <div class="card alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert"
+              style="background-color: rgba(5, 147, 73, 1);">
+              <strong></strong> {{ message }}
+              <button type="button" class="close mt-1" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true" class="mt-2 px-0">&times;</span>
+              </button>
             </div>
-            {% endfor %}
-            {% endif %}
+          </div>
+          {% endfor %}
+          {% endif %}
 
-            {% block content %}
+          {% block content %}
 
-            {% endblock %}
+          {% endblock %}
         </div>
       </div>
+
     </div>
+
+    <!-- <div class="sidebar1">
+      <div class="sidebar-wrapper1 mt-4">
+        {% if user.is_authenticated %}
+        <div class="card text-center pb-3">
+          <ul class="nav1 p-0 m-0">
+            <img src="{{user.cover_pic.url}}" style="margin-top: 0;" class="pb-2">
+            <a href="{% url 'name_profile' user.username %}">
+              <span class="photo" style="display: inline-flex;">
+                <img style="margin-top: -40px;border-radius: 4rem; border:3px solid;" src="{{user.profile_pic.url}}"
+                  alt="Profile Photo" width="70" height="70">
+              </span>
+              <h4 class="p-0 m-1">{{user.username}}</h4>
+              <p style="font-size: 12px;">{{user.about_me}}</p>
+            </a>
+            <p class="btn btn-success btn-sm" style="font-size: 10px; color: white;cursor: unset;">Stacker Reputation
+              {{user.reputation_score}}</p>
+          </ul>
+        </div>
+        {% else %}
+        {% endif %}
+      </div>
+    </div> -->
+  </div>
   </div>
 
   <div class="fixed-plugin">
-    
   </div>
   <!--   Core JS Files   -->
   <script src="{% static './assets/js/core/jquery.min.js' %}"></script>
@@ -201,6 +339,7 @@
   <script src="{% static './assets/js/black-dashboard.min.js' %}"></script>
   <!-- Black Dashboard DEMO methods, don't include it in your project! -->
   <script src="https://use.fontawesome.com/6f7dfef630.js"></script>
+  
   <script>
     $(document).ready(function () {
       $().ready(function () {
@@ -310,13 +449,6 @@
           $('body').removeClass('white-content');
         });
       });
-    });
-  </script>
-  <script>
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      demo.initDashboardPageCharts();
-
     });
   </script>
   <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
