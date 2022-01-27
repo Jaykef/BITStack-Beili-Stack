@@ -13,6 +13,14 @@ from django.db.models import F
 from django.db.models import Q
 # Create your views here.
 
+def reputation(booleanval, rate, ques_obj):
+    if booleanval == False:
+        userrepu = ques_obj.author
+    else:
+        userrepu = ques_obj.answered_by
+
+    userrepu.reputation_score += rate
+    userrepu.save()
 
 def thumbs(request):
 
@@ -21,6 +29,7 @@ def thumbs(request):
         id = int(request.POST.get('postid'))
         button = request.POST.get('button')
         update = Questions.objects.get(pk=id)
+        flag=False
 
         if update.thumbs.filter(id=request.user.id).exists():
             # Get the users current vote (True/False)
@@ -32,6 +41,7 @@ def thumbs(request):
 
                 # Now we need action based upon what button pressed
                 if button == 'thumbsup':
+                    reputation(flag,20, update)
                     update.thumbsup = F('thumbsup') - 1
                     update.thumbs.remove(request.user)
                     update.save()
@@ -44,6 +54,7 @@ def thumbs(request):
 
                 if button == 'thumbsdown':
                     # Change vote in Post
+                    reputation(flag,-20, update)
                     update.thumbsup = F('thumbsup') - 1
                     update.thumbsdown = F('thumbsdown') + 1
                     update.save()
@@ -66,6 +77,7 @@ def thumbs(request):
                 if button == 'thumbsup':
 
                     # Change vote in Post
+                    reputation(flag,20, update)
                     update.thumbsup = F('thumbsup') + 1
                     update.thumbsdown = F('thumbsdown') - 1
                     update.save()
@@ -83,6 +95,7 @@ def thumbs(request):
 
                 if button == 'thumbsdown':
 
+                    reputation(flag,-20, update)
                     update.thumbsdown = F('thumbsdown') - 1
                     update.thumbs.remove(request.user)
                     update.save()
@@ -96,6 +109,7 @@ def thumbs(request):
         else:        # New selection
 
             if button == 'thumbsup':
+                reputation(flag,20, update)
                 update.thumbsup = F('thumbsup') + 1
                 update.thumbs.add(request.user)
                 update.save()
@@ -104,6 +118,7 @@ def thumbs(request):
                 new.save()
             else:
                 # Add vote down
+                reputation(flag,-20, update)
                 update.thumbsdown = F('thumbsdown') + 1
                 update.thumbs.add(request.user)
                 update.save()
@@ -184,6 +199,7 @@ def questions(request):
             user.ans_given.add(a)
         user.ques_asked.add(q)
         user.save()
+        
 
         messages.success(request, 'Question posted successfully')
 
@@ -420,6 +436,16 @@ def delete_quest(request, id):
     messages.info(request, "Question deleted successfully!")
     return redirect("/", {'q': q, 'quest_to_delete': quest_to_delete, 'show_del_button': show_del_button})
 
+@login_required
+def delete_answer(request, id):
+    ans_to_delete = Answer.objects.get(id=id)
+    user = request.user
+    a = ans_to_delete.answered_by
+    show_del_button = True if user == a else False
+    ans_to_delete.delete()
+    messages.info(request, "Answer deleted successfully!")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'a': a, 'ans_to_delete': ans_to_delete, 'show_del_button': show_del_button})
+
 
 @login_required
 def delete_comment(request, id):
@@ -429,7 +455,7 @@ def delete_comment(request, id):
     show_del_button = True if user == c else False
     comment_to_delete.delete()
     messages.info(request, "Comment deleted successfully!")
-    return redirect("/", {'c': c, 'comment_to_delete': comment_to_delete, 'show_del_button': show_del_button})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'c': c, 'comment_to_delete': comment_to_delete, 'show_del_button': show_del_button})
 
 
 @login_required
@@ -500,6 +526,7 @@ def profile(request, username):
     seeuser = StackoverflowUser.objects.get(username=username)
     showeditbutton = True if seeuser == request.user else False
     userques = Questions.objects.filter(author=seeuser).order_by('-created_at')
+    userposts = Posts.objects.filter(author=seeuser).order_by('-posted_at')
     ansgiven = Answer.objects.filter(
         answered_by=seeuser).order_by('-created_at')
     uservotes = Questions.objects.filter(
@@ -547,7 +574,8 @@ def profile(request, username):
 
         return redirect('name_questionsingle', pk=q.pk)
 
-    return render(request, 'main/profile.html', {'seeuser': seeuser, 'showeditbutton': showeditbutton, 'userques': userques, 'ansgiven': ansgiven, 'uservotes': uservotes})
+    return render(request, 'main/profile.html', {'seeuser': seeuser, 'showeditbutton': showeditbutton, 'userques': userques,'userposts':userposts, 'ansgiven': ansgiven, 'uservotes': uservotes})
+
 
 
 @login_required
