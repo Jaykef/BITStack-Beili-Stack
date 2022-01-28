@@ -520,11 +520,19 @@ def postByTag(request, tag_word):
 
     return render(request, 'main/posts.html', {'all_posts': all_posts, 'marked': marked})
 
+@login_required
+def delete_account(request):   
+    user = request.user
+    user.delete()
+    messages.success(request, "Account deleted successfully")          
+
+    return redirect(request, 'main/questions1.html') 
 
 @login_required
 def profile(request, username):
     seeuser = StackoverflowUser.objects.get(username=username)
     showeditbutton = True if seeuser == request.user else False
+    showDeleteButton = True if seeuser == request.user else False 
     userques = Questions.objects.filter(author=seeuser).order_by('-created_at')
     userposts = Posts.objects.filter(author=seeuser).order_by('-posted_at')
     ansgiven = Answer.objects.filter(
