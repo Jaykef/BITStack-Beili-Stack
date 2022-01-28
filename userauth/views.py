@@ -87,13 +87,13 @@ def login_request(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.info(request, f"Welcome back {username}!")
+                messages.info(request, f"Welcome {username}!")
                 return redirect("/")
             else:
                 messages.error(request, "Invalid username or password")
                         
         else:
-            messages.error(request, "Invalid username or password")
+            messages.error(request, "Invalid username or password, Please Sign Up")
             
     form  =  AuthenticationForm()
     return render(request, "userauth/login.html", {"form" : form})
@@ -108,7 +108,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        messages.success(request, 'Account activated successfully. Thank you for your email confirmation. Now you can login your account.')
+        messages.success(request, 'Account activated successfully. Thank you for your email confirmation. Now you can login to your account.')
         return redirect('name_login_req')
     else:
         messages.error(request, 'Activation link is invalid!')
