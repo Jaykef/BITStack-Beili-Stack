@@ -526,7 +526,7 @@ def delete_account(request):
     user.delete()
     messages.success(request, "Account deleted successfully")          
 
-    return redirect(request, 'name_questions') 
+    return redirect('name_questions') 
 
 @login_required
 def profile(request, username):
