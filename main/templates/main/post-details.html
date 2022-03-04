@@ -128,7 +128,7 @@
           {% if user.is_authenticated %}
           <a href="?isQuestion=True&id={{q.pk}}&action_type=downvote&page={{all_answers.number}}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-share-alt" style="font-size: 16px"></i> Share</a>
           {% else %}
-          <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-share-alt" style="font-size:16px"></i> Share</a>
+          <a href="{% url 'name_postdetail' p.pk %}" style="font-weight: 400;font-size: 12px;"><i class="fa fa-share-alt" style="font-size:16px"></i> Views</a>
           {% endif %}
         </div>
         
