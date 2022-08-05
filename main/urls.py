@@ -4,6 +4,7 @@ from django.conf import settings
 from . import views
 from django.conf.urls.static import static
 
+# ©️ 2022 Jaykef | Jaward
 
 urlpatterns = [
     path('', views.questions, name = 'name_questions'),
