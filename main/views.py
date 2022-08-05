@@ -13,6 +13,8 @@ from django.db.models import F
 from django.db.models import Q
 # Create your views here.
 
+# ©️ 2022 Jaykef | Jaward
+
 def reputation(booleanval, rate, ques_obj):
     if booleanval == False:
         userrepu = ques_obj.author
