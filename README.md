@@ -13,6 +13,7 @@ pip install -r requirements.txt
 python3 manage.py runserver
 ```
 
+
 ![](https://github.com/Jaykef/BITStack/blob/main/screenshots/1.png)
 
 ![](https://github.com/Jaykef/BITStack/blob/main/screenshots/2.png)
