@@ -3,12 +3,12 @@ A University Stack Web App
 
 ## Installation
 
-###1. Install requirements
+1. Install requirements
 
 ```
 pip install -r requirements.txt
 ```
-###2. Run
+2. Run
 ```
 python3 manage.py runserver
 ```
