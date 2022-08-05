@@ -30,6 +30,7 @@ python3 manage.py runserver
 http://localhost:8000/
 ```
 
+## Screen Shots
 
 ![](https://github.com/Jaykef/BITStack/blob/main/screenshots/1.png)
 
