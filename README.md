@@ -6,11 +6,23 @@ A University Stack Web App
 1. Install requirements
 
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
-2. Run
+2. Make migrations
+```
+python3 manage.py makemigrations
+```
+3. Migrate
+```
+python3 manage.py migrate
+```
+4. Run server
 ```
 python3 manage.py runserver
+```
+5. Open app in browser
+```
+http://127.0.0.1:8000/
 ```
 
 
