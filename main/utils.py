@@ -4,7 +4,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.contrib import messages
 
-
+# ©️ 2022 Jaykef | Jaward
 
 def reputation(booleanval, rate, ques_obj):
     if booleanval == False:
