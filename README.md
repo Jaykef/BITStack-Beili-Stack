@@ -2,9 +2,10 @@
 A University Stack Web App
 
 ### Test account
-#### Username: Test_usr
-#### Password: bitstack22#
-
+```
+Username: Test_usr
+Password: bitstack22#
+```
 ## Installation
 
 1. Install requirements
