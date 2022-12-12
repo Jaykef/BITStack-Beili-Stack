@@ -1,1 +1,1 @@
-web:gunicorn BITStack.wsgi --log-file -
+web: gunicorn BITStack.wsgi --log-file -
