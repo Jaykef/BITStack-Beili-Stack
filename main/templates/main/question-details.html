@@ -20,6 +20,7 @@
     .row {
       padding: 8px;
       margin-top: -10px;
+      justify-content: normal;
     }
   }
 
@@ -109,7 +110,7 @@
               class="btn btn-link text-dark p-0 border-0 btn-outline-light thumbaction" {% else %}
               href="{% url 'name_questionsingle' q.pk %}" class="btn btn-link text-dark  p-0 border-0 btn-outline-light"
               {% endif %} value="thumbsup" data-toggle="tooltip" title="Upvote" role="button">
-              <svg style="font-size: 20px; margin-top: -10px;" id="thumbsup" width="1.5em" height="1.5em"
+              <svg style="font-size: 20px; margin-top: -10px;background-color: #fff;" id="thumbsup" width="1.5em" height="1.5em"
                 viewBox="0 0 16 16" class="up bi bi-caret-up-fill" fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -121,7 +122,7 @@
               class="btn btn-link text-dark p-0 border-0 btn-outline-light thumbaction" {% else %}
               href="{% url 'name_questionsingle' q.pk %}" class=" btn btn-link text-dark p-0 border-0 btn-outline-light"
               {% endif %} value="thumbsdown" data-toggle="tooltip" title="Downvote" role="button">
-              <svg style="font-size: 20px; margin-top: -10px;" id="thumbsdown" width="1.5em" height="1.5em"
+              <svg style="font-size: 20px; margin-top: -10px;background-color: #fff;" id="thumbsdown" width="1.5em" height="1.5em"
                 viewBox="0 0 16 16" class="mt-2 down bi bi-caret-down-fill" fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg">
                 <path
